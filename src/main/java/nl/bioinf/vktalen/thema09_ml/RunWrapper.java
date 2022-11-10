@@ -9,6 +9,10 @@ public final class RunWrapper {
         ApacheCliOptionsProvider optProvider = new ApacheCliOptionsProvider(args);
         try {
             optProvider.initialize();
+
+            // Collect variables
+            String inputFile = optProvider.getInputFile();
+            String outputFile = optProvider.getOutputFile();
         } catch (ParseException ex) {
             System.err.println("ERROR: Parsing failed!\n   Reason: " + ex.getMessage() + "\n");
             optProvider.printFormattedHelp();

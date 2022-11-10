@@ -6,6 +6,9 @@ public class ApacheCliOptionsProvider {
     private final String[] cli_arguments;
     private final Options cli_options;
 
+    private String inputFile;
+    private String outputFile;
+
     public ApacheCliOptionsProvider(final String[] args) {
         // Save arguments to class object attribute
         this.cli_arguments = args;
@@ -32,11 +35,28 @@ public class ApacheCliOptionsProvider {
 
     private void buildOptions() {
         // Create options
+        Option inputFileOption = Option.builder("f").longOpt("input-file").argName("file-name")
+                .desc(".arff type file with unclassified data to be classified")
+                .hasArg().required().build();
+        Option outputFileOption = Option.builder("o").longOpt("output-file").argName("file-name")
+                .desc("name of the output file the classified dataset should be saved to")
+                .hasArg().build();
+
+        // Add options to Options object
+        cli_options.addOption(inputFileOption);
+        cli_options.addOption(outputFileOption);
     }
 
     private void parseOptions() throws ParseException{
         // Create CommandLine object that's parsed given options+arguments
         CommandLine cmd = new DefaultParser().parse(cli_options, cli_arguments);
+
+        // Save input file name
+        this.inputFile = cmd.getOptionValue("input-file");
+
+        // Save output file name if given
+        if (cmd.hasOption("output-file")) {
+            this.outputFile = cmd.getOptionValue("output-file");
         }
     }
 
@@ -56,7 +76,20 @@ public class ApacheCliOptionsProvider {
 
     public void printFormattedHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("java -jar Theme09-ML-Application-0.1.jar", cli_options, true);
+        formatter.printHelp("java -jar Theme09-ML-Application-0.1.2.jar", cli_options, true);
         System.out.println(); // blank line
+    }
+
+    /**
+     * @return inputFile The name that was provided in command line
+     */
+    public String getInputFile() {
+        return inputFile;
+    }
+    /**
+     * @return outputFile The name that was provided in command line
+     */
+    public String getOutputFile() {
+        return outputFile;
     }
 }
