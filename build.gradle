@@ -1,9 +1,11 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
+description 'Java wrapper around machine learning model that can predict malignancy of breast masses'
 group 'nl.bioinf.vktalen.thema09_ml'
-version '0.0.1'
+version '0.1'
 
 repositories {
     mavenCentral()
@@ -16,9 +18,8 @@ dependencies {
     implementation group: 'commons-cli', name: 'commons-cli', version: '1.5.0'
 }
 
-jar {
-    description 'creates executable jar without dependencies'
-    baseName = 'MLModelWrapperApplication'
+shadowJar {
+    archiveFileName = 'Theme09-ML-Application-' + project.version + '.jar'
 
     manifest {
         attributes(

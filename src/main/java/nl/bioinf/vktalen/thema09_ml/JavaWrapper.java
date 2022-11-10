@@ -1,7 +1,11 @@
 package nl.bioinf.vktalen.thema09_ml;
 
-public class JavaWrapper {
+import java.util.Arrays;
+
+public final class JavaWrapper {
+    private JavaWrapper() {}
+
     public static void main(String[] args) {
-        System.out.println("Hello World");
+        ApacheCliOptionsProvider op = new ApacheCliOptionsProvider(args);
     }
 }
