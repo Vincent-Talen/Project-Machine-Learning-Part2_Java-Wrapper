@@ -23,7 +23,7 @@ shadowJar {
 
     manifest {
         attributes(
-                'Main-Class': 'nl.bioinf.vktalen.thema09_ml.JavaWrapper'
+                'Main-Class': 'nl.bioinf.vktalen.thema09_ml.RunWrapper'
         )
     }
 }
