@@ -16,6 +16,7 @@ public class ApacheCliOptionsProvider {
 
     private String inputFile;
     private String outputFile;
+    private boolean showDistribution;
 
     /**
      * Constructor method.
@@ -68,10 +69,14 @@ public class ApacheCliOptionsProvider {
         Option outputFileOption = Option.builder("o").longOpt("output-file").argName("file-name")
                 .desc("name of the output file the classified dataset should be saved to")
                 .hasArg().build();
+        Option showDistributionOption = Option.builder("d").longOpt("show-distribution")
+                .desc("Show prediction distributions for the classes and not only the prediction")
+                .build();
 
         // Add options to Options object
         cli_options.addOption(inputFileOption);
         cli_options.addOption(outputFileOption);
+        cli_options.addOption(showDistributionOption);
     }
 
     /**
@@ -85,13 +90,10 @@ public class ApacheCliOptionsProvider {
         // Create CommandLine object that's parsed given options+arguments
         CommandLine cmd = new DefaultParser().parse(cli_options, cli_arguments);
 
-        // Save input file name
+        // Save option values to class attributes
         this.inputFile = cmd.getOptionValue("input-file");
-
-        // Save output file name if given
-        if (cmd.hasOption("output-file")) {
-            this.outputFile = cmd.getOptionValue("output-file");
-        }
+        this.outputFile = cmd.getOptionValue("output-file", null);
+        this.showDistribution = cmd.hasOption("show-distribution");
     }
 
     /**
@@ -125,7 +127,7 @@ public class ApacheCliOptionsProvider {
      */
     public void printFormattedHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("java -jar Theme09-ML-Application-0.1.4.jar", cli_options, true);
+        formatter.printHelp("java -jar Theme09-ML-Application-0.1.5.jar", cli_options, true);
         System.out.println(); // blank line
     }
 
@@ -140,5 +142,11 @@ public class ApacheCliOptionsProvider {
      */
     public String getOutputFile() {
         return outputFile;
+    }
+    /**
+     * @return showDistribution If the prediction distributions for the classes should be shown
+     */
+    public boolean getShowDistribution() {
+        return showDistribution;
     }
 }

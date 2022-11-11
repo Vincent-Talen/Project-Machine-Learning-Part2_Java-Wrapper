@@ -27,6 +27,7 @@ public final class RunWrapper {
             // Collect variables
             String inputFile = optProvider.getInputFile();
             String outputFile = optProvider.getOutputFile();
+            boolean showDistribution = optProvider.getShowDistribution();
         } catch (ParseException ex) {
             System.err.println("ERROR: Parsing failed!\n   Reason: " + ex.getMessage() + "\n");
             optProvider.printFormattedHelp();
