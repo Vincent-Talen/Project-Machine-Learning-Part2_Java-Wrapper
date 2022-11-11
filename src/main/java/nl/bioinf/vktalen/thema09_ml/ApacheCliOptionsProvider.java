@@ -2,6 +2,8 @@ package nl.bioinf.vktalen.thema09_ml;
 
 import org.apache.commons.cli.*;
 
+import java.util.List;
+
 /**
  * Class that creates an Apache Commons Command Line Interface.
  * Command line arguments are parsed and options' values saved as class attributes accessible with getter methods.
@@ -106,8 +108,12 @@ public class ApacheCliOptionsProvider {
         // New parsed CommandLine object that does not throw an exception when encountering unknown argument
         CommandLine cmd = new DefaultParser().parse(cli_options, cli_arguments, true);
 
+        // Get unparsed arguments to check if it's empty or if help has been called behind another argument
+        List<String> unparsedArgs = cmd.getArgList();
+        boolean helpFoundInUnparsed = unparsedArgs.contains("-h") || unparsedArgs.contains("--help");
+
         // If the help option is used or no options are given the help should be printed
-        if (cmd.hasOption("help") || cmd.getArgList().isEmpty()) {
+        if (cmd.hasOption("help") || helpFoundInUnparsed || unparsedArgs.isEmpty()) {
             hasHelp = true;
         }
         return hasHelp;
@@ -119,7 +125,7 @@ public class ApacheCliOptionsProvider {
      */
     public void printFormattedHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("java -jar Theme09-ML-Application-0.1.3.jar", cli_options, true);
+        formatter.printHelp("java -jar Theme09-ML-Application-0.1.4.jar", cli_options, true);
         System.out.println(); // blank line
     }
 
