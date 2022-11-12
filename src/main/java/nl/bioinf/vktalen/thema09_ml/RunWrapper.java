@@ -28,6 +28,9 @@ public final class RunWrapper {
             String inputFile = optProvider.getInputFile();
             String outputFile = optProvider.getOutputFile();
             boolean showDistribution = optProvider.getShowDistribution();
+
+            // Run weka classifier
+            WekaClassifier wekaClassifier = new WekaClassifier(inputFile);
         } catch (ParseException ex) {
             System.err.println("ERROR: Parsing failed!\n   Reason: " + ex.getMessage() + "\n");
             optProvider.printFormattedHelp();
