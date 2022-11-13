@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022 Vincent Talen.
+ * Licensed under GPLv3. See LICENSE file.
+ */
 package nl.bioinf.vktalen.thema09_ml;
 
 import java.io.InputStream;
