@@ -131,7 +131,7 @@ public class ApacheCliOptionsProvider {
      */
     public void printFormattedHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("java -jar Theme09-ML-Application-0.2.4.jar", clOptions, true);
+        formatter.printHelp("java -jar Theme09-ML-Application-0.2.5.jar", clOptions, true);
         System.out.println(); // blank line
     }
 
