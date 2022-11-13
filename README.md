@@ -28,9 +28,10 @@ Project-Machine-Learning-Part2_Java-Wrapper
 └── src
     └── main
         ├── java
-        │   ├── ApacheCliOptionsProvider.java
-        │   ├── RunWrapper.java
-        │   └── WekaClassifier.java
+        │   └── nl.bioinf.vktalen.thema09_ml
+        │       ├── ApacheCliOptionsProvider.java
+        │       ├── RunWrapper.java
+        │       └── WekaClassifier.java
         └── resources
             └── SimpleLogistic.model
 ```
