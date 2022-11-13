@@ -68,13 +68,13 @@ The most basic usage is to only show the help, which can be done like this:
 > $java -jar Theme09-ML-Application-0.3.0.jar -h
 
 To simply classify the instances of a file and have the results printed to the console:
-> $java -jar Theme09-ML-Application-0.3.0.jar -i <unlabeled_data.arff>
+> $java -jar Theme09-ML-Application-0.3.0.jar -i <testdata/unlabeled_data.arff>
 
 To show distributions as well, use the `-d` or `--showDistribution` flag:
-> $java -jar Theme09-ML-Application-0.3.0.jar -i <unlabeled_data.arff> -d
+> $java -jar Theme09-ML-Application-0.3.0.jar -i <testdata/unlabeled_data.arff> -d
 
 The application can also save the new dataset to an arff file when the `-o` option is used
-> $java -jar Theme09-ML-Application-0.3.0.jar -i <unlabeled_data.arff> -o <classified.arff>
+> $java -jar Theme09-ML-Application-0.3.0.jar -i <testdata/unlabeled_data.arff> -o <classified.arff>
 
 If the showDistribution option flag is used together with the output option the dataset saved to the file will have two new attributes for the distributions at the end of the file.
 
