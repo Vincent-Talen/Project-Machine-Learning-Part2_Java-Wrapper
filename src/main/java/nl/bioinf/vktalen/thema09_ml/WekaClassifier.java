@@ -9,11 +9,28 @@ import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSink;
 import weka.core.converters.ConverterUtils.DataSource;
 
+/**
+ * Class that uses and implements part of the Weka Java API to classify instances.
+ * It reads data from an .arff file, classifies the instances from it and
+ * optionally saves the resulting dataset to a new .arff file.
+ *
+ * @author Vincent Talen (389015)
+ */
 public class WekaClassifier {
     private AbstractClassifier classifier;
     private String outputFile;
     private boolean showDistribution;
 
+    /**
+     * Constructor method that performs the entire classifying process.
+     * It loads the dataset from the inputFile, classifies instances,
+     * if specified by showDistribution it also calculates the distributions.
+     * When outputFile is not null it is tried to save the new dataset to it.
+     *
+     * @param inputFile An .arff type file with unlabeled instances
+     * @param outputFile File to save resulting new dataset to, can also be null
+     * @param showDistribution If the distribution for classes should be shown
+     */
     public WekaClassifier(String inputFile, String outputFile, boolean showDistribution) {
         try {
             // Load classifier
@@ -44,6 +61,12 @@ public class WekaClassifier {
         }
     }
 
+    /**
+     * Loads a classifier from a stream in the java archive of a .model file.
+     *
+     * @return classifier The classifier that was loaded from a .model stream in the .jar
+     * @throws Exception Has a formatted message specifying that the error happened in this method
+     */
     private AbstractClassifier loadClassifier() throws Exception {
         String modelFile = "/SimpleLogistic.model";
         try {
@@ -57,6 +80,13 @@ public class WekaClassifier {
         }
     }
 
+    /**
+     * Loads a dataset from an .arff file.
+     *
+     * @param datafile The name of the .arff file that needs to be read.
+     * @return unclassifiedInstances The dataset from the given datafile as an Instances object.
+     * @throws Exception Has a formatted message specifying that the error happened in this method
+     */
     private Instances loadArff(String datafile) throws Exception {
         try {
             // Load data from file and turn into Instances object
@@ -73,6 +103,11 @@ public class WekaClassifier {
         }
     }
 
+    /**
+     * Adds distribution attributes for each class label in an Instances object.
+     *
+     * @param instancesObject An instances object with a class index specified
+     */
     private void addDistributionAttributes(Instances instancesObject) {
         // Get class attribute object
         Attribute classAttribute = instancesObject.classAttribute();
@@ -85,6 +120,14 @@ public class WekaClassifier {
         }
     }
 
+    /**
+     * Classifies instances from a dataset. 
+     * Checks the class property showDistribution if class distributions should be shown.
+     *
+     * @param unclassifiedInstances An Instances object whose instances need to be classified
+     * @return Dataset that has all instances labeled and if specified distribution attributes added
+     * @throws Exception Has a formatted message specifying that the error happened in this method
+     */
     private Instances classifyInstances(Instances unclassifiedInstances) throws Exception {
         try {
             // Copy dataset that will get instances labeled
@@ -134,6 +177,12 @@ public class WekaClassifier {
         }
     }
 
+    /**
+     * Saves the given dataset to the output file in the outputFile class property.
+     *
+     * @param dataset The dataset that should be saved.
+     * @throws Exception Has a formatted message specifying that the error happened in this method
+     */
     private void saveToOutputFile(Instances dataset) throws Exception {
         try {
             DataSink.write(outputFile, dataset);
