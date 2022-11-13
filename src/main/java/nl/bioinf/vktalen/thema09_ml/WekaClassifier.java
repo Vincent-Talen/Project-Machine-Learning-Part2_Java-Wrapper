@@ -1,7 +1,6 @@
 package nl.bioinf.vktalen.thema09_ml;
 
 import java.io.InputStream;
-import java.util.Arrays;
 
 import weka.classifiers.AbstractClassifier;
 import weka.core.Attribute;
@@ -10,9 +9,9 @@ import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSource;
 
 public class WekaClassifier {
-    private final String modelFile = "/SimpleLogistic.model";
     private AbstractClassifier classifier;
     private String outputFile;
+    private boolean showDistribution;
 
     public WekaClassifier(String inputFile, String outputFile, boolean showDistribution) {
         try {
@@ -21,17 +20,13 @@ public class WekaClassifier {
 
             // Save option values from optProvider
             this.outputFile = outputFile;
+            this.showDistribution = showDistribution;
 
             // Load data into Instances object
             Instances unclassifiedInstances = loadArff(inputFile);
 
             // Classify all instances
-            Instances classifiedInstances;
-            if (!showDistribution) {
-                classifiedInstances = classifyInstances(unclassifiedInstances);
-            } else {
-                classifiedInstances = distributionClassifyInstances(unclassifiedInstances);
-            }
+            Instances classifiedInstances = classifyInstances(unclassifiedInstances);
         } catch (Exception ex) {
             System.err.println("ERROR: WekaClassifier failed!");
             System.err.printf("  Reason: %s %n%n", ex.getMessage());
@@ -40,6 +35,7 @@ public class WekaClassifier {
     }
 
     private AbstractClassifier loadClassifier() throws Exception {
+        String modelFile = "/SimpleLogistic.model";
         try {
             // In a java archive (.jar) the file is already a stream
             InputStream in = getClass().getResourceAsStream(modelFile);
@@ -82,51 +78,43 @@ public class WekaClassifier {
     private Instances classifyInstances(Instances unclassifiedInstances) throws Exception {
         // Copy dataset that will get instances labeled
         Instances labeledInstances = new Instances(unclassifiedInstances);
+        // Add distribution attributes for the class labels if needed
+        if (showDistribution) {
+            addDistributionAttributes(labeledInstances);
+        }
 
-        // Classify instances and set their class label in the new dataset
+        // For each instance, by index
         for (int i = 0; i < unclassifiedInstances.numInstances(); i++) {
-            double classIndex = classifier.classifyInstance(unclassifiedInstances.instance(i));
-            labeledInstances.instance(i).setClassValue(classIndex);
+            // Classify instance and set its class value
+            double clsIndex = classifier.classifyInstance(unclassifiedInstances.instance(i));
+            labeledInstances.instance(i).setClassValue(clsIndex);
 
-            // Print to either console or save to file
+            // Create StringBuilder object to print the distribution nicely
+            StringBuilder distrStrBuilder = new StringBuilder();
+            if (showDistribution) {
+                // Start distribution string
+                distrStrBuilder.append("\tDistribution: ");
+
+                // Get distribution for classification labels
+                double[] distribution = classifier.distributionForInstance(unclassifiedInstances.instance(i));
+
+                // Add each distribution value to it's corresponding attribute for the current instance
+                for (int j = 0; j < distribution.length; j++) {
+                    // Get the index in dataset of the current attribute and with it set the value
+                    int curDatasetAttributeIndex = unclassifiedInstances.numAttributes() + j;
+                    labeledInstances.instance(i).setValue(curDatasetAttributeIndex, distribution[j]);
+
+                    // Add class label name and distribution to the distribution string
+                    String curClassLabel = labeledInstances.classAttribute().value(j);
+                    distrStrBuilder.append(String.format("(%s=%.4f) ", curClassLabel, distribution[j]));
+                }
+            }
+            // If no output file is given print results to command line
             if (outputFile == null) {
-                String classLabel = labeledInstances.classAttribute().value((int) classIndex);
-                System.out.println("Instance " + (i + 1) + ": classified as " + classLabel);
+                String clsLabel = labeledInstances.classAttribute().value((int) clsIndex);
+                System.out.printf("Instance %d: classified as %s%s%n", (i + 1), clsLabel, distrStrBuilder);
             }
         }
-        System.out.println("\nLabeled dataset: \n" + labeledInstances);
-        return labeledInstances;
-    }
-
-    private Instances distributionClassifyInstances(Instances unclassifiedInstances) throws Exception {
-        // Copy dataset that will get instances labeled
-        Instances labeledInstances = new Instances(unclassifiedInstances);
-
-        // Add attribute columns and get their indices in the dataset
-        addDistributionAttributes(labeledInstances);
-
-        // Classify instances and set their class label in the new dataset
-        for (int i = 0; i < unclassifiedInstances.numInstances(); i++) {
-            // Get distributions for classification labels
-            double[] distributions = classifier.distributionForInstance(unclassifiedInstances.instance(i));
-
-            // Get the index of the highest distribution present
-            int maxAtIndex = 0;
-            for (int j = 0; j < distributions.length; j++) {
-                maxAtIndex = distributions[j] > distributions[maxAtIndex] ? j : maxAtIndex;
-                int curDatasetAttributeIndex = unclassifiedInstances.numAttributes() + j;
-                labeledInstances.instance(i).setValue(curDatasetAttributeIndex, distributions[j]);
-            }
-
-            labeledInstances.instance(i).setClassValue(maxAtIndex);
-
-            if (outputFile == null) {
-                String classLabel = labeledInstances.classAttribute().value(maxAtIndex);
-                System.out.println("Instance " + (i + 1) + ": classified as " + classLabel);
-                System.out.println("\tDistributions: " + Arrays.toString(distributions));
-            }
-        }
-        System.out.println("\nLabeled dataset: \n" + labeledInstances);
         return labeledInstances;
     }
 }

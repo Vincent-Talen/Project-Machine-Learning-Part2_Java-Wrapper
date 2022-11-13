@@ -1,8 +1,8 @@
 package nl.bioinf.vktalen.thema09_ml;
 
-import org.apache.commons.cli.*;
-
 import java.util.List;
+
+import org.apache.commons.cli.*;
 
 /**
  * Class that creates an Apache Commons Command Line Interface.
@@ -70,7 +70,7 @@ public class ApacheCliOptionsProvider {
                 .desc("name of the output file the classified dataset should be saved to")
                 .hasArg().build();
         Option showDistributionOption = Option.builder("d").longOpt("show-distribution")
-                .desc("Show prediction distributions for the classes and not only the prediction")
+                .desc("Show prediction distribution for the classes and not only the prediction")
                 .build();
 
         // Add options to Options object
@@ -127,7 +127,7 @@ public class ApacheCliOptionsProvider {
      */
     public void printFormattedHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("java -jar Theme09-ML-Application-0.2.2.jar", clOptions, true);
+        formatter.printHelp("java -jar Theme09-ML-Application-0.2.3.jar", clOptions, true);
         System.out.println(); // blank line
     }
 
@@ -144,7 +144,7 @@ public class ApacheCliOptionsProvider {
         return outputFile;
     }
     /**
-     * @return showDistribution If the prediction distributions for the classes should be shown
+     * @return showDistribution If the prediction distribution for the classes should be shown
      */
     public boolean getShowDistribution() {
         return showDistribution;
