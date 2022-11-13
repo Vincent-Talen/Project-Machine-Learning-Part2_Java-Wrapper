@@ -11,8 +11,8 @@ import java.util.List;
  * @author Vincent Talen (389015)
  */
 public class ApacheCliOptionsProvider {
-    private final String[] cli_arguments;
-    private final Options cli_options;
+    private final String[] clArguments;
+    private final Options clOptions;
 
     private String inputFile;
     private String outputFile;
@@ -27,8 +27,8 @@ public class ApacheCliOptionsProvider {
      */
     public ApacheCliOptionsProvider(final String[] args) {
         // Save arguments to class object attribute
-        this.cli_arguments = args;
-        this.cli_options = new Options();
+        this.clArguments = args;
+        this.clOptions = new Options();
     }
 
     /**
@@ -43,7 +43,7 @@ public class ApacheCliOptionsProvider {
     public void initialize() throws ParseException {
         // Create and add help option
         Option helpOption = new Option("h", "help", false, "print this message");
-        cli_options.addOption(helpOption);
+        clOptions.addOption(helpOption);
 
         // Perform first parse that indicates if help should be printed
         boolean printHelp = checkForHelp();
@@ -51,7 +51,7 @@ public class ApacheCliOptionsProvider {
         // Build all other options for application
         buildOptions();
 
-        // If help was specified or no options used, print formatted help and stop application
+        // If help should be printed, print formatted help now with all options and stop application
         if (printHelp) {printFormattedHelp(); System.exit(0);}
 
         // Parse options and save values
@@ -63,7 +63,7 @@ public class ApacheCliOptionsProvider {
      */
     private void buildOptions() {
         // Create options
-        Option inputFileOption = Option.builder("f").longOpt("input-file").argName("file-name")
+        Option inputFileOption = Option.builder("i").longOpt("input-file").argName("file-name")
                 .desc(".arff type file with unclassified data to be classified")
                 .hasArg().required().build();
         Option outputFileOption = Option.builder("o").longOpt("output-file").argName("file-name")
@@ -74,9 +74,9 @@ public class ApacheCliOptionsProvider {
                 .build();
 
         // Add options to Options object
-        cli_options.addOption(inputFileOption);
-        cli_options.addOption(outputFileOption);
-        cli_options.addOption(showDistributionOption);
+        clOptions.addOption(inputFileOption);
+        clOptions.addOption(outputFileOption);
+        clOptions.addOption(showDistributionOption);
     }
 
     /**
@@ -88,7 +88,7 @@ public class ApacheCliOptionsProvider {
      */
     private void parseOptions() throws ParseException{
         // Create CommandLine object that's parsed given options+arguments
-        CommandLine cmd = new DefaultParser().parse(cli_options, cli_arguments);
+        CommandLine cmd = new DefaultParser().parse(clOptions, clArguments);
 
         // Save option values to class attributes
         this.inputFile = cmd.getOptionValue("input-file");
@@ -108,7 +108,7 @@ public class ApacheCliOptionsProvider {
         boolean hasHelp = false;
 
         // New parsed CommandLine object that does not throw an exception when encountering unknown argument
-        CommandLine cmd = new DefaultParser().parse(cli_options, cli_arguments, true);
+        CommandLine cmd = new DefaultParser().parse(clOptions, clArguments, true);
 
         // Get unparsed arguments to check if it's empty or if help has been called behind another argument
         List<String> unparsedArgs = cmd.getArgList();
@@ -127,7 +127,7 @@ public class ApacheCliOptionsProvider {
      */
     public void printFormattedHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("java -jar Theme09-ML-Application-0.2.0.jar", cli_options, true);
+        formatter.printHelp("java -jar Theme09-ML-Application-0.2.2.jar", clOptions, true);
         System.out.println(); // blank line
     }
 

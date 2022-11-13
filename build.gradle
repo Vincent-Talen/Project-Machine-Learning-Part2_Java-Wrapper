@@ -5,7 +5,7 @@ plugins {
 
 description 'Java wrapper around machine learning model that can predict malignancy of breast masses'
 group 'nl.bioinf.vktalen.thema09_ml'
-version '0.2.0'
+version '0.2.2'
 
 repositories {
     mavenCentral()
